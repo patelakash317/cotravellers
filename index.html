@@ -117,7 +117,7 @@
           // console.log(current_date+' - '+specific_date);
           // console.log(proc_departure_date+' - '+depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]);
 
-          if((current_date.getTime() > specific_date.getTime()) && (current_date.getTime() > after_restarting_date.getTime())) {
+          if((current_date.getTime() > specific_date.getTime()) && (current_date.getTime() < after_restarting_date.getTime())) {
             // show this student
             show_date = 0;
           } else {
