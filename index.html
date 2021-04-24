@@ -110,19 +110,19 @@
 
         let show_date = 1;
         if(depart_date_data[0]){
-          var specific_date = new Date(depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]+" 23:59:59");
-          var after_restarting_date = new Date("2021-05-22 00:00:00");
+          var travel_date = new Date(depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]+" 23:59:59");
+          var new_starting_date = new Date("2021-05-21 00:00:00");
 
           var current_date = new Date();
-           console.log(current_date+' - '+specific_date+' - '+after_restarting_date);
+           console.log(current_date+' - '+travel_date+' - '+new_starting_date);
           // console.log(proc_departure_date+' - '+depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]);
           
-          if((current_date.getTime() > specific_date.getTime()) && (current_date.getTime() < after_restarting_date.getTime())) {
+          if((current_date.getTime() > travel_date.getTime()) || (current_date.getTime() > new_starting_date.getTime())) {
             // show this student
-            console.log('Hiding');
+            //console.log('Hiding');
             show_date = 0;
           } else {
-                        console.log('Showing');
+            //console.log('Showing');
             // show this student do not show
           }
         }
