@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
       .footer {
         position: fixed;
@@ -100,6 +101,7 @@
         let departure_date = data[i]["gsx$departureflightdate"]["$t"];
         let col_uni_name = data[i]["gsx$collegeuniversityname"]["$t"];
         let col_uni_loc = data[i]["gsx$campuslocation"]["$t"];
+        let contact = data[i]["gsx$shareyourcontactdetailslinkemail"]["$t"];
         let travelfrom = data[i]["gsx$travelfrom"]["$t"];
         let travellayover = data[i]["gsx$travellayover"]["$t"];
         let traveldestination = data[i]["gsx$traveldestinations"]["$t"];
@@ -128,6 +130,17 @@
         }
 
         if(show_date == 1){
+          let contact_link = '';
+          var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+          if(!regex.test(contact)) {
+            // contact_num = ''; // false -- is not email
+            if(contact != 'Yes' && contact != 'No'){
+              contact_link = "https://wa.me/"+contact;
+            }
+          }else{
+            //is email
+          }
+          
           document.getElementById("demo").innerHTML +=
             "<tr>" +
               "<td>" + name + "</td>" +
@@ -137,7 +150,7 @@
               "<td>" + travelfrom + "</td>" +
               "<td>" + travellayover + "</td>" +
               "<td>" + traveldestination + "</td>" +
-              "<td><a class='btn btn-primary' href='mailto:"+email+"'>Send email</a></td>" +
+              "<td><a class='btn btn-primary' href='mailto:"+email+"'>Send email</a><a href="'+contact_link+'"><i class="fa fa-whatsapp" style="font-size:24px;color:green"></i></a></td>" +
             "</tr>";
         }
       }
