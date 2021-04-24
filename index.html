@@ -117,7 +117,7 @@
            console.log(current_date+' - '+travel_date+' - '+new_starting_date);
           // console.log(proc_departure_date+' - '+depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]);
           
-          if((current_date.getTime() > travel_date.getTime()) || (current_date.getTime() > new_starting_date.getTime())) {
+          if((current_date.getTime() > travel_date.getTime()) || (current_date.getTime() < new_starting_date.getTime())) {
             // show this student
             //console.log('Hiding');
             show_date = 0;
