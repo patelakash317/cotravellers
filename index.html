@@ -138,7 +138,8 @@
           }else{
             //is contact not email
             if(contact != 'Yes' && contact != 'No'){
-              contact_link = "<a class='btn btn-primary' target='_blank' href='https://wa.me/"+contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
+              contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
+              // https://wa.me/ - not working
             }
           }
           
