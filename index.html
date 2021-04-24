@@ -129,15 +129,19 @@
         }
 
         if(show_date == 1){
+          let email_link = "<a class='btn btn-primary' href='mailto:"+email+"'><i class="fa fa-envelope" style="font-size:22px;color:white"></i> Send email</a>";
           let contact_link = '';
           var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
           if(!regex.test(contact)) {
-            // contact_num = ''; // false -- is not email
+            // contact_num = ''; // false -- is  email
             if(contact != 'Yes' && contact != 'No'){
-              contact_link = "https://wa.me/"+contact;
             }
           }else{
-            //is email
+            //return true
+            //is contact
+            if(contact != 'Yes' && contact != 'No'){
+              contact_link = "<a class='btn btn-primary' href='https://wa.me/"+contact+"'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i> Send Whatsapp</a>";
+            }
           }
           
           document.getElementById("demo").innerHTML +=
@@ -149,7 +153,7 @@
               "<td>" + travelfrom + "</td>" +
               "<td>" + travellayover + "</td>" +
               "<td>" + traveldestination + "</td>" +
-              "<td><a class='btn btn-primary' href='mailto:"+email+"'>Send email</a><a href='"+contact_link+"'><i class='fa fa-whatsapp' style='font-size:24px;color:green'></i></a></td>" +
+              "<td>"+email_link+contact_link+"</td>" +
             "</tr>";
         }
       }
