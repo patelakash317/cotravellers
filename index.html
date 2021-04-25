@@ -133,10 +133,10 @@
           let contact_link = '';
           let sms_link = '';
 
-          if(isEmail(contact)) { // string contains email
+          //if(isEmail(contact)) { // string contains email
             // false -- is email not contact
             
-          }else{
+          //}else{
             //is contact not email
             if(contact != 'Yes' && contact != 'No'){
               let final_contact = contact;
@@ -165,7 +165,7 @@
               // https://wa.me/ - not working
               sms_link = "<a class='btn btn-primary' target='_blank' href='sms:"+contact+"' title='Send SMS'><i class='fa fa-comment' style='font-size:22px;color:white;'></i></a>";
             }
-          }
+          //}
           
           document.getElementById("demo").innerHTML +=
             "<tr>" +
