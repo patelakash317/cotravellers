@@ -145,14 +145,15 @@
                 if (num != null){
                     var number = num.toString();
                     number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
-                    console.log(name+' - '+number.length);
-                    if (number.length > 12){
+                    let lx = number.length;
+                    console.log(name+' - '+lx);
+                    if (lx > 12){
                       final_contact = '';
                       
-                    } else if (number.length == 10){
+                    } else if (lx === 10){
                       final_contact = "91"+contact;
                     
-                    } else if (number.length == 12){
+                    } else if (lx === 12){
                       final_contact = number;
                     }
                     console.log(final_contact);
