@@ -133,39 +133,43 @@
           let contact_link = '';
           let sms_link = '';
 
-          //if(isEmail(contact)) { // string contains email
-            // false -- is email not contact
-            
-          //}else{
-            //is contact not email
-            if(contact != 'Yes' && contact != 'No'){
-              let final_contact = contact;
-              //processing number
-                var num = contact.match(/[\d\.]+/g); // getting only numbers
-                if (num != null){
-                    var number = num.toString();
-                    number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
-                    let lx = number.length;
-                    console.log(name+' - '+lx);
-                    if (lx > 12){
-                      final_contact = '';
-                      
-                    } else if (lx === 10){
-                      final_contact = "91"+contact;
-                    
-                    } else if (lx === 12){
-                      final_contact = number;
-                    }
-                    console.log(final_contact);
-                }
-              //processing number ends
-              if(final_contact != ''){
-                contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+final_contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
+          
+          if(contact != 'Yes' && contact != 'No'){
+            let final_contact = contact;
+            //processing number
+              var num = contact.match(/[\d\.]+/g); // getting only numbers
+              if (num != null){
+                  var number = num.toString();
+                  number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
+                  let lx = number.length;
+                  console.log(name+' - '+lx);
+                  if (lx > 12){
+                    final_contact = '';
+
+                  } else if (lx === 10){
+                    final_contact = "91"+contact;
+
+                  } else if (lx === 12){
+                    final_contact = number;
+                  }
+                  console.log(final_contact);
               }
-              // https://wa.me/ - not working
+            //processing number ends
+            
+            if(isEmail(final_contact)) { // string contains email
+              // false -- is email not contact
+              final_contact = '';
+ 
+            }else{
+              //is contact not email
+            }
+
+            if(final_contact != ''){
+              contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+final_contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
               sms_link = "<a class='btn btn-primary' target='_blank' href='sms:"+contact+"' title='Send SMS'><i class='fa fa-comment' style='font-size:22px;color:white;'></i></a>";
             }
-          //}
+            // https://wa.me/ - not working
+          }
           
           document.getElementById("demo").innerHTML +=
             "<tr>" +
