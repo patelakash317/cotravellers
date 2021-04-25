@@ -131,6 +131,7 @@
         if(show_date == 1){
           let email_link = "<a class='btn btn-primary' href='mailto:"+email+"' title='Send Email'><i class='fa fa-envelope' style='font-size:22px;color:white'></i></a>";
           let contact_link = '';
+          let sms_link = '';
 
           if(isEmail(contact)) { // string contains email
             // false -- is email not contact
@@ -138,8 +139,24 @@
           }else{
             //is contact not email
             if(contact != 'Yes' && contact != 'No'){
-              contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
+              let final_contact = contact;
+              //processing number
+                var num = contact.match(/[\d\.]+/g);
+                if (num != null){
+                    var number = num.toString();
+                    if (number.length > 12){
+                      final_contact = '';
+                      
+                    } else if (number.length == 10){
+                      final_contact = "91"+contact;
+                    }
+                }
+              //processing number ends
+              if(final_contact != ''){
+                contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+final_contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
+              }
               // https://wa.me/ - not working
+              sms_link = "<a class='btn btn-primary' target='_blank' href='sms:"+contact+"' title='Send SMS'><i class='fa fa-comment' style='font-size:22px;color:white;'></i></a>";
             }
           }
           
@@ -152,7 +169,7 @@
               "<td>" + travelfrom + "</td>" +
               "<td>" + travellayover + "</td>" +
               "<td>" + traveldestination + "</td>" +
-              "<td>"+email_link+"&nbsp;&nbsp;"+contact_link+"</td>" +
+              "<td>"+email_link+"&nbsp;&nbsp;"+contact_link+"&nbsp;&nbsp;"+sms_link+"</td>" +
             "</tr>";
         }
       }
