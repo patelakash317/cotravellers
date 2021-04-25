@@ -145,7 +145,7 @@
                 if (num != null){
                     var number = num.toString();
                     number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
-                    //console.log(name+' - '+number.length);
+                    console.log(name+' - '+number.length);
                     if (number.length > 12){
                       final_contact = '';
                       
@@ -155,7 +155,7 @@
                     } else if (number.length == 12){
                       final_contact = number;
                     }
-                    //console.log(final_contact);
+                    console.log(final_contact);
                 }
               //processing number ends
               if(final_contact != ''){
