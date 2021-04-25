@@ -141,10 +141,11 @@
             if(contact != 'Yes' && contact != 'No'){
               let final_contact = contact;
               //processing number
-                var num = contact.match(/[\d\.]+/g);
+                var num = contact.match(/[\d\.]+/g); // getting only numbers
                 if (num != null){
                     var number = num.toString();
-                  console.log(name+' - '+number.length);
+                    number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
+                    //console.log(name+' - '+number.length);
                     if (number.length > 12){
                       final_contact = '';
                       
