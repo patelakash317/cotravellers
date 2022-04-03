@@ -1,187 +1,93 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Co-Travellers</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="Get Co-traveller">
-    <meta name="description" content="Get Co-traveller">
-    <meta name="keywords" content="Search, find, Co-traveller">
-    <meta name="author" content="Skyology Inc.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="shortcut icon" href="./assets/images/Skyology.png" type="image/x-icon">  
-
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
-    <style>
-      .footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color: #ddd;
-        color: #000;
-        text-align: center;
-        padding: 5px;
-        font-size: 11px;
-      }
-
-      .container{
-        padding: 0 !important;
-      }
-      @media (max-width:576px){
-        .container{
-          padding: 10px !important;
-        }
-      }
-      @media (max-width:768px){
-        .container{
-          padding: 10px !important;
-        }
-      }
-    </style>
-  </head>
+  <head></head>
   <body>
-    <div class="container my-4">
-      <div class="container m-0">
-        <h3 id="httitle">Co-Travellers</h3>
-        <div class="text-left mb-4">
-          <a class="btn btn-primary" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSfJkin4PoaC0fpmoda4Swbb9AwjOhOCBdXXscDGYNV5zxCuHw/viewform" role="button">Click to fill the form</a>
-          <p>Fill this form to let others connect with you as a co-traveller</p>
-        </div>
-      </div>
+    <!--
+    BEFORE RUNNING:
+    ---------------
+    1. If not already done, enable the Google Sheets API
+       and check the quota for your project at
+       https://console.developers.google.com/apis/api/sheets
+    2. Get access keys for your application. See
+       https://developers.google.com/api-client-library/javascript/start/start-js#get-access-keys-for-your-application
+    3. For additional information on authentication, see
+       https://developers.google.com/sheets/api/quickstart/js#step_2_set_up_the_sample
+    -->
+    <script>
+    function makeApiCall() {
+      var params = {
+        // The ID of the spreadsheet to retrieve data from.
+        spreadsheetId: '1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw',  // TODO: Update placeholder value.
 
-      <!-- Table -->
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Flight name</th>
-            <th>Departure date</th>
-            <th>College/University</th>
-            <th>Travel From</th>
-            <th>Travel Layover</th>
-            <th>Travel Destination</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody id="demo"><tr><td colspan="8">Please wait while we are fetching data...</td></tr></tbody>
-      </table>
-      <br/> <br/>
-    </div>
+        // The A1 notation of the values to retrieve.
+        range: 'B:M',  // TODO: Update placeholder value.
 
-    <footer class="footer">
-      <p class="float-left m-0"><img width="20" src="./assets/images/Skyology.png"> &nbsp; <span>Powered by <a href="https://skyology-inc.business.site/" target="_blank">Skyology Inc.</a></span></p>
+        // How values should be represented in the output.
+        // The default render option is ValueRenderOption.FORMATTED_VALUE.
+        valueRenderOption: 'ValueRenderOption.FORMATTED_VALUE',  // TODO: Update placeholder value.
 
-      <p class="float-right m-0">Sponsored by <a href="https://patelakash317.github.io/" target="_blank">Akash Patel</a></p>
-    </footer>
-  </body>
-</html>
+        // How dates, times, and durations should be represented in the output.
+        // This is ignored if value_render_option is
+        // FORMATTED_VALUE.
+        // The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+        dateTimeRenderOption: '',  // TODO: Update placeholder value.
+      };
 
-<script src="./assets/js/jquery-3.4.1.slim.min.js"></script>
-<script src="./assets/js/popper.min.js"></script>
-<script src="./assets/js/bootstrap.min.js"></script>
-
-<script src="./assets/js/jquery.dataTables.min.js"></script>
-<script src="./assets/js/dataTables.bootstrap4.min.js"></script>
-
-<script type="text/javascript">
-  let xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      let data = JSON.parse(this.responseText).feed.entry;
-
-      document.getElementById('demo').innerHTML = '';
-
-      let i;
-      for (i = 1; i < data.length; i++) {
-        let name = data[i]["gsx$studentname"]["$t"];
-        let flightname = data[i]["gsx$flightname"]["$t"];
-        let departure_date = data[i]["gsx$departureflightdate"]["$t"];
-        let col_uni_name = data[i]["gsx$collegeuniversityname"]["$t"];
-        let col_uni_loc = data[i]["gsx$campuslocation"]["$t"];
-        let travelfrom = data[i]["gsx$travelfrom"]["$t"];
-        let travellayover = data[i]["gsx$travellayover"]["$t"];
-        let traveldestination = data[i]["gsx$traveldestinations"]["$t"];
-        let email = data[i]["gsx$emailaddress"]["$t"];
-
-        let proc_departure_date = departure_date.replaceAll('/', '-');
-        let depart_date_data = proc_departure_date.split('-');
-
-        let show_date = 1;
-        if(depart_date_data[0]){
-          var specific_date = new Date(depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]+" 23:59:59");
-
-          var current_date = new Date();
-          // console.log(current_date+' - '+specific_date);
-          // console.log(proc_departure_date+' - '+depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]);
-
-          if(current_date.getTime() > specific_date.getTime()) {
-            // show this student
-            show_date = 0;
-          } else {
-            // show this student do not show
-          }
-        }
-
-        if(show_date == 1){
-          document.getElementById("demo").innerHTML +=
-            "<tr>" +
-              "<td>" + name + "</td>" +
-              "<td>" + flightname + "</td>" +
-              "<td>" + departure_date + "</td>" +
-              "<td>" + col_uni_name + ", " + col_uni_loc + "</td>" +
-              "<td>" + travelfrom + "</td>" +
-              "<td>" + travellayover + "</td>" +
-              "<td>" + traveldestination + "</td>" +
-              "<td><a class='btn btn-primary' href='mailto:"+email+"'>Send email</a></td>" +
-            "</tr>";
-        }
-      }
-
-      $(document).ready(function() {
-        $('table').DataTable();
+      var request = gapi.client.sheets.spreadsheets.values.get(params);
+      request.then(function(response) {
+        // TODO: Change code below to process the `response` object:
+        console.log(response.result);
+      }, function(reason) {
+        console.error('error: ' + reason.result.error.message);
       });
     }
-  };
 
-  xmlhttp.open(
-    "GET",
-    "https://spreadsheets.google.com/feeds/list/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/1/public/full?alt=json",
-    // "https://spreadsheets.google.com/feeds/cells/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/od6/public/full?alt=json",
+    function initClient() {
+      var API_KEY = '';  // TODO: Update placeholder with desired API key.
 
-    // "https://spreadsheets.google.com/feeds/list/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/od6/public/values?alt=json", // original in example
+      var CLIENT_ID = '';  // TODO: Update placeholder with desired client ID.
 
-    // -------------
-    // https://docs.google.com/spreadsheets/d/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/edit?usp=sharing
+      // TODO: Authorize using one of the following scopes:
+      //   'https://www.googleapis.com/auth/drive'
+      //   'https://www.googleapis.com/auth/drive.file'
+      //   'https://www.googleapis.com/auth/drive.readonly'
+      //   'https://www.googleapis.com/auth/spreadsheets'
+      //   'https://www.googleapis.com/auth/spreadsheets.readonly'
+      var SCOPE = '';
 
-  // https://spreadsheets.google.com/feeds/cells/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/1/public/full?alt=json
+      gapi.client.init({
+        'apiKey': API_KEY,
+        'clientId': CLIENT_ID,
+        'scope': SCOPE,
+        'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+      }).then(function() {
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSignInStatus);
+        updateSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+      });
+    }
 
-    // https://spreadsheets.google.com/feeds/worksheets/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/public/full?alt=json
-    // -------------
+    function handleClientLoad() {
+      gapi.load('client:auth2', initClient);
+    }
 
-  // https://docs.google.com/spreadsheets/d/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/edit?usp=sharing
-    // "https://docs.google.com/spreadsheets/d/e/2PACX-1vS6n50Q0PQSipI79j5v1i_oBJGSDEk5kzDehDmGWWg1kGfcvBzqkDcP_wC5AkQ5WwhyhxqyVIMcTrNS/pub?gid=1352908269&single=true&output=csv",
-    // "https://spreadsheets.google.com/feeds/list/1ZLhgYDsU02l3i5IfA_W7yvwsg9ir4pCbUWi6hjuN5fw/od6/public/values?alt=json",
-    true
-  );
-  xmlhttp.send();
+    function updateSignInStatus(isSignedIn) {
+      if (isSignedIn) {
+        makeApiCall();
+      }
+    }
 
-  let show_head = findGetParameter('headtit');
-  if(show_head == 'no'){
-    document.getElementById('httitle').style.display = "none";
-  }
+    function handleSignInClick(event) {
+      gapi.auth2.getAuthInstance().signIn();
+    }
 
-  function findGetParameter(parameterName) {
-    var result = null,
-        tmp = [];
-    location.search
-        .substr(1)
-        .split("&")
-        .forEach(function (item) {
-          tmp = item.split("=");
-          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-        });
-    return result;
-  }
-</script>
+    function handleSignOutClick(event) {
+      gapi.auth2.getAuthInstance().signOut();
+    }
+    </script>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+    <button id="signin-button" onclick="handleSignInClick()">Sign in</button>
+    <button id="signout-button" onclick="handleSignOutClick()">Sign out</button>
+  </body>
+</html>
