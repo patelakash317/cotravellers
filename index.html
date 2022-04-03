@@ -86,103 +86,115 @@
 <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
 
 <script type="text/javascript">
+  // new url like query: https://docs.google.com/spreadsheets/d/$%7Bsheet_key%7D/gviz/tq?tqx=out:csv&tq=select+*+where+B+%3D+%27Himanshu%27&key=$%7Bgoogle_API_key%7D
+  // Ref: https://stackoverflow.com/questions/48819927/get-filtered-data-from-google-sheets-api/48820107#48820107
+  // https://spreadsheets.google.com/feeds/cells/${sheet_key}/od6/public/values?alt=json
+
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      let data = JSON.parse(this.responseText).feed.entry;
+      let data = JSON.parse(this.responseText);
+      // console.log(data.values);
 
       document.getElementById('demo').innerHTML = '';
 
-      let i;
-      for (i = 1; i < data.length; i++) {
-        let name = data[i]["gsx$studentname"]["$t"];
-        let flightname = data[i]["gsx$flightname"]["$t"];
-        let departure_date = data[i]["gsx$departureflightdate"]["$t"];
-        let col_uni_name = data[i]["gsx$collegeuniversityname"]["$t"];
-        let col_uni_loc = data[i]["gsx$campuslocation"]["$t"];
-        let contact = data[i]["gsx$shareyourcontactdetailslinkemail"]["$t"];
-        let travelfrom = data[i]["gsx$travelfrom"]["$t"];
-        let travellayover = data[i]["gsx$travellayover"]["$t"];
-        let traveldestination = data[i]["gsx$traveldestinations"]["$t"];
-        let email = data[i]["gsx$emailaddress"]["$t"];
+      if(data.values.length > 0){
+        let i;
+        let all_d = data.values;
 
-        let proc_departure_date = departure_date.replaceAll('/', '-');
-        let depart_date_data = proc_departure_date.split('-');
+        // console.log(all_d[0][1]);
+        // 0: "Student name", 1: "Flight name", 2: "Departure flight", 3: "College/University", 4: "Campus location", 5: Travel From", 6: "Travel Layover", 7: "Travel destinations", 8: "Email address", 9: "Contact"
+        for (i = 0; i < all_d.length; i++) {
+          let departure_date = all_d[i][2];
 
-        let show_date = 1;
-        if(depart_date_data[0]){
-          var travel_date = new Date(depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]+" 23:59:59");
-          var new_starting_date = new Date("2021-05-21 00:00:00");
+          let proc_departure_date = departure_date.replaceAll('/', '-');
+          let depart_date_data = proc_departure_date.split('-');
 
-          var current_date = new Date();
-          // console.log(current_date+' - '+travel_date+' - '+new_starting_date);
-          // console.log(proc_departure_date+' - '+depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]);
-          
-          if((current_date.getTime() > travel_date.getTime()) || (travel_date.getTime() < new_starting_date.getTime())) {
-            // show this student
-            // console.log('Hiding');
-            show_date = 0;
-          } else {
-            // console.log('Showing');
-            // show this student do not show
-          }
-        }
+          let show_date = 1;
+          if(depart_date_data[0]){
+            var travel_date = new Date(depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]+" 23:59:59");
+            var new_starting_date = new Date("2022-03-03 00:00:00");
 
-        if(show_date == 1){
-          let email_link = "<a class='btn btn-primary' href='mailto:"+email+"' title='Send Email'><i class='fa fa-envelope' style='font-size:22px;color:white'></i></a>";
-          let contact_link = '';
-          let sms_link = '';
-
-          
-          if(contact != 'Yes' && contact != 'No'){
-            let final_contact = contact;
-            //processing number
-              var num = contact.match(/[\d\.]+/g); // getting only numbers
-              if (num != null){
-                  var number = num.toString();
-                  number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
-                  let lx = number.length;
-                  console.log(name+' - '+lx);
-                  if (lx > 12){
-                    final_contact = '';
-
-                  } else if (lx === 10){
-                    final_contact = "91"+contact;
-
-                  } else if (lx === 12){
-                    final_contact = number;
-                  }
-                  console.log(final_contact);
-              }
-            //processing number ends
+            var current_date = new Date();
+            // console.log(current_date+' - '+travel_date+' - '+new_starting_date);
+            // console.log(proc_departure_date+' - '+depart_date_data[2]+'-'+depart_date_data[1]+'-'+depart_date_data[0]);
             
-            if(isEmail(final_contact)) { // string contains email
-              // false -- is email not contact
-              final_contact = '';
- 
-            }else{
-              //is contact not email
+            if ( (isNaN(depart_date_data[2])) || (depart_date_data[2] <= 2021) || (current_date.getTime() > travel_date.getTime()) || (travel_date.getTime() < new_starting_date.getTime())) {
+              // show this student
+              // console.log('Hiding');
+              show_date = 0;
+            } else {
+              // console.log('Showing');
+              // show this student do not show
             }
-
-            if(final_contact != ''){
-              contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+final_contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
-              sms_link = "<a class='btn btn-primary' target='_blank' href='sms:"+final_contact+"' title='Send SMS'><i class='fa fa-comment' style='font-size:22px;color:white;'></i></a>";
-            }
-            // https://wa.me/ - not working
           }
-          
-          document.getElementById("demo").innerHTML +=
-            "<tr>" +
-              "<td>" + name + "</td>" +
-              "<td>" + flightname + "</td>" +
-              "<td>" + departure_date + "</td>" +
-              "<td>" + col_uni_name + ", " + col_uni_loc + "</td>" +
-              "<td>" + travelfrom + "</td>" +
-              "<td>" + travellayover + "</td>" +
-              "<td>" + traveldestination + "</td>" +
-              "<td>"+email_link+"&nbsp;&nbsp;"+contact_link+"&nbsp;&nbsp;"+sms_link+"</td>" +
-            "</tr>";
+
+          if(show_date == 1){
+            let name = all_d[i][0];
+            let flightname = all_d[i][1];
+            let col_uni_name = all_d[i][3];
+            let col_uni_loc = all_d[i][4];
+            let travelfrom = all_d[i][5];
+            let travellayover = all_d[i][6];
+            let traveldestination = all_d[i][7];
+            let email = all_d[i][8];
+            let contact = all_d[i][9];
+
+            let email_link = "<a class='btn btn-primary' href='mailto:"+email+"' title='Send Email'><i class='fa fa-envelope' style='font-size:22px;color:white'></i></a>";
+            let contact_link = '';
+            let sms_link = '';
+            
+            if(contact != 'Yes' && contact != 'No'){
+              let final_contact = contact;
+              //processing number
+                var num = contact.match(/[\d\.]+/g); // getting only numbers
+                if (num != null){
+                    var number = num.toString();
+                    number = number.replace(/[^\w\s]/gi, ''); // clearing special characters
+                    let lx = number.length;
+                    // console.log(name+' - '+lx);
+                    if (lx > 12){
+                      final_contact = '';
+
+                    } else if (lx === 10){
+                      final_contact = "91"+contact;
+
+                    } else if (lx === 12){
+                      final_contact = number;
+                    }
+                    // console.log(final_contact);
+                }
+              //processing number ends
+              
+              if(isEmail(final_contact)) { // string contains email
+                // false -- is email not contact
+                final_contact = '';
+   
+              }else{
+                //is contact not email
+              }
+
+              if(final_contact != ''){
+                contact_link = "<a class='btn btn-primary' target='_blank' href='https://api.whatsapp.com/send?phone="+final_contact+"' title='Send Whatsapp'><i class='fa fa-whatsapp' style='font-size:22px;color:white;'></i></a>";
+                sms_link = "<a class='btn btn-primary' target='_blank' href='sms:"+final_contact+"' title='Send SMS'><i class='fa fa-comment' style='font-size:22px;color:white;'></i></a>";
+              }
+              // https://wa.me/ - not working
+            }
+            
+            document.getElementById("demo").innerHTML +=
+              "<tr>" +
+                "<td>" + name + "</td>" +
+                "<td>" + flightname + "</td>" +
+                "<td>" + departure_date + "</td>" +
+                "<td>" + col_uni_name + ", " + col_uni_loc + "</td>" +
+                "<td>" + travelfrom + "</td>" +
+                "<td>" + travellayover + "</td>" +
+                "<td>" + traveldestination + "</td>" +
+                "<td>"+email_link+"&nbsp;&nbsp;"+contact_link+"&nbsp;&nbsp;"+sms_link+"</td>" +
+              "</tr>";
+          }
         }
+      } else {
       }
       
       function isEmail(email) {
